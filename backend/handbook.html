@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClientsMine Backend Developer Handbook</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f9fafb;
+            --text-primary: #111827;
+            --text-secondary: #4b5563;
+            --accent: #10b981;
+            --accent-light: #ecfdf5;
+            --border: #e5e7eb;
+            --code-bg: #1e1e2e;
+            --code-text: #cdd6f4;
+            --sidebar-width: 280px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            display: flex;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        /* Sidebar Styling */
+        aside {
+            width: var(--sidebar-width);
+            background-color: var(--bg-secondary);
+            border-right: 1px solid var(--border);
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            padding: 2rem 1.5rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .logo-area h2 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-group-title {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #9ca3af;
+            margin-bottom: 0.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 0.5rem 0.75rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .nav-link:hover {
+            background-color: #f3f4f6;
+            color: var(--text-primary);
+        }
+
+        .nav-link.active {
+            background-color: var(--accent-light);
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        /* Main Content Area */
+        main {
+            margin-left: var(--sidebar-width);
+            flex: 1;
+            padding: 3rem 4rem;
+            max-width: 1000px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1.125rem;
+            margin-bottom: 3rem;
+        }
+
+        section {
+            margin-bottom: 5rem;
+            scroll-margin-top: 2rem;
+        }
+
+        h2 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.5rem;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-top: 2rem;
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+        }
+
+        p {
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+        }
+
+        /* Interactive Flow Diagrams */
+        .diagram-container {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .flow-node {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--accent);
+            border-radius: 8px;
+            padding: 1rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .flow-node-title {
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .flow-node-desc {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        /* Code Blocks */
+        .code-container {
+            background-color: var(--code-bg);
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 1.5rem 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .code-header {
+            background-color: #11111b;
+            padding: 0.5rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #313244;
+        }
+
+        .code-title {
+            font-size: 0.75rem;
+            color: #a6adc8;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        pre {
+            padding: 1.25rem;
+            overflow-x: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            color: var(--code-text);
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+
+        th, td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.875rem;
+        }
+
+        th {
+            background-color: var(--bg-secondary);
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 0.125rem 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border-radius: 9999px;
+            background-color: var(--bg-secondary);
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+        }
+
+        .badge-accent {
+            background-color: var(--accent-light);
+            color: var(--accent);
+            border: 1px solid #a7f3d0;
+        }
+
+        /* Interactive Tabs */
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 1.5rem;
+            gap: 1rem;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 0.5rem 1rem;
+            font-family: inherit;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .tab-btn.active {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Print / PDF Styling */
+        @media print {
+            aside {
+                display: none !important;
+            }
+            main {
+                margin-left: 0 !important;
+                padding: 0 !important;
+                max-width: 100% !important;
+            }
+            section {
+                page-break-before: always;
+                margin-bottom: 3rem !important;
+            }
+            .tabs {
+                display: none !important;
+            }
+            .tab-content {
+                display: block !important;
+                margin-bottom: 3rem;
+                page-break-inside: avoid;
+            }
+            .code-container {
+                page-break-inside: avoid;
+            }
+            pre {
+                white-space: pre-wrap !important;
+                word-wrap: break-word !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <aside>
+        <div class="logo-area">
+            <h2>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                ClientsMine
+            </h2>
+        </div>
+
+        <nav>
+            <div class="nav-group-title">Overview</div>
+            <a href="#introduction" class="nav-link active">Introduction</a>
+            <a href="#architecture" class="nav-link">System Flow</a>
+
+            <div class="nav-group-title">Folders</div>
+            <a href="#configs" class="nav-link">Configs</a>
+            <a href="#models" class="nav-link">Models</a>
+            <a href="#middlewares" class="nav-link">Middlewares</a>
+            <a href="#utils" class="nav-link">Utilities</a>
+            <a href="#routers" class="nav-link">Routers</a>
+            <a href="#controllers" class="nav-link">Controllers</a>
+            <a href="#pipeline" class="nav-link">Scraping Pipeline</a>
+            <a href="#optimization" class="nav-link">Optimization</a>
+        </nav>
+    </aside>
+
+    <main>
+        <section id="introduction">
+            <h1>ClientsMine Backend Handbook</h1>
+            <p class="subtitle">A complete interactive guide to the architecture, flow, and code of the ClientsMine backend server.</p>
+            
+            <p>Welcome to the ClientsMine Backend Handbook. This guide was generated to help developers understand how the server-side scraper and API modules interact, how data flows through the agentic pipeline, and what each individual file is responsible for.</p>
+        </section>
+
+        <section id="architecture">
+            <h2>System Flow & Architecture</h2>
+            <p>ClientsMine utilizes an event-driven, streaming architecture. Instead of waiting for a long batch process to finish before showing results, the server streams leads to the client progressively using <strong>Server-Sent Events (SSE)</strong>.</p>
+            
+            <div class="diagram-container">
+                <div class="flow-node">
+                    <div class="flow-node-title">1. Client Request (HTTP POST /api/ai/client)</div>
+                    <div class="flow-node-desc">User submits search criteria. Server opens an SSE connection and holds it open.</div>
+                </div>
+                <div class="flow-node">
+                    <div class="flow-node-title">2. Intent Analysis (PhaseOne / intentParser.js)</div>
+                    <div class="flow-node-desc">Gemini Flash parses the query into structured parameters (role, category, timeframe).</div>
+                </div>
+                <div class="flow-node">
+                    <div class="flow-node-title">3. Parallel Scrape (streamingOrchestrator.js)</div>
+                    <div class="flow-node-desc">Selected sites are scraped in parallel. Whichever site finishes first is parsed instantly.</div>
+                </div>
+                <div class="flow-node">
+                    <div class="flow-node-title">4. Extraction & Optimization (dataCollector.js & dataOptimizer.js)</div>
+                    <div class="flow-node-desc">Leads are extracted (using custom Cheerio parsers or LLM) and checked for duplicate/date constraints.</div>
+                </div>
+                <div class="flow-node">
+                    <div class="flow-node-title">5. Progressive SSE Push (aiClientAnalyzer.js)</div>
+                    <div class="flow-node-desc">Optimized leads are pushed to the client immediately. Stream closes once all sites complete.</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="configs">
+            <h2>Configs Folder</h2>
+            <p>Contains configuration logic for database and external connections.</p>
+            
+            <div class="tabs">
+                <button class="tab-btn active" onclick="openTab(event, 'db-js')">db.js</button>
+            </div>
+
+            <div id="db-js" class="tab-content active">
+                <h3>db.js</h3>
+                <p><strong>Purpose:</strong> Connects the application to MongoDB via Mongoose.</p>
+                <p><strong>Interactions:</strong> Imported by <code>server.js</code> at startup.</p>
+                
+                <div class="code-container">
+                    <div class="code-header"><span class="code-title">configs/db.js</span></div>
+                    <pre><code>const mongoose = require('mongoose')
+
+const connectDB = async () =>{
+    try {
+        await mongoose.connect(process.env.MONGO_URI)
+        console.log("Database connected successfully")
+    } catch (error) {
+        console.log("Database connection failed", error)
+        process.exit(1)
+    }
+}
+
+module.exports = connectDB</code></pre>
+                </div>
+                <p><strong>Explanation:</strong> Calls <code>mongoose.connect()</code> using the connection string from environment variables. If the connection fails, it catches the error and calls <code>process.exit(1)</code> to shut down the server immediately rather than running in an unstable, disconnected state.</p>
+            </div>
+        </section>
+
+        <section id="models">
+            <h2>Models Folder</h2>
+            <p>Defines the schemas and structures of the MongoDB collections.</p>
+            
+            <div class="tabs">
+                <button class="tab-btn active" onclick="openTab(event, 'model-user')">user.js</button>
+                <button class="tab-btn" onclick="openTab(event, 'model-msg')">usersMessage.js</button>
+                <button class="tab-btn" onclick="openTab(event, 'model-lead')">scrapedLead.js</button>
+            </div>
+
+            <div id="model-user" class="tab-content active">
+                <h3>user.js</h3>
+                <p><strong>Purpose:</strong> Stores user profiles, hashed credentials, and billing tiers.</p>
+                <div class="code-container">
+                    <div class="code-header"><span class="code-title">models/user.js</span></div>
+                    <pre><code>const mongoose = require('mongoose')
+
+const userDetails = new mongoose.Schema(
+    {
+        username: { type: String, required: true },
+        email: { type: String, required: true, unique: true },
+        password: { type: String, required: true },
+        country: { type: String, required: true },
+        state: { type: String, required: true },
+        city: { type: String, required: true },
+        phone: { type: String, required: true, unique: true },
+        occupation: { type: String, required: true },
+        isPro: { type: Boolean, default: false },
+    }, { timestamps: true }
+)
+
+module.exports = mongoose.model("User", userDetails)</code></pre>
+                </div>
+                <p><strong>Explanation:</strong> Defines the user fields. The <code>isPro</code> field controls access limits (free accounts are capped at 5 leads per search).</p>
+            </div>
+
+            <div id="model-msg" class="tab-content">
+                <h3>usersMessage.js</h3>
+                <p><strong>Purpose:</strong> Logs search queries and tracks task progress.</p>
+                <div class="code-container">
+                    <div class="code-header"><span class="code-title">models/usersMessage.js</span></div>
+                    <pre><code>const mongoose = require('mongoose')
+
+const UserMessageSchema = new mongoose.Schema(
+    {
+        userId: { type: String, required: true, ref: "User" },
+        title: { type: String, required: true },
+        message: { type: String, required: true },
+        status: {
+            type: String,
+            enum: ['PROCESSING', 'COMPLETED', 'ERROR', 'CLARIFICATION_REQUIRED'],
+            default: 'PROCESSING'
+        },
+        error_details: { type: String }
+    }, { timestamps: true }
+)
+
+module.exports = mongoose.model("UsersMessage", UserMessageSchema)</code></pre>
+                </div>
+                <p><strong>Explanation:</strong> Links queries to users. Maintains an enum field to track if a query is still running or has completed/failed.</p>
+            </div>
+
+            <div id="model-lead" class="tab-content">
+                <h3>scrapedLead.js</h3>
+                <p><strong>Purpose:</strong> Stores individual extracted leads.</p>
+                <div class="code-container">
+                    <div class="code-header"><span class="code-title">models/scrapedLead.js</span></div>
+                    <pre><code>const mongoose = require('mongoose');
+
+const scrapedLeadSchema = new mongoose.Schema({
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    userMessageId: { type: mongoose.Schema.Types.ObjectId, ref: 'UsersMessage', required: false },
+    domain_category: { type: String, required: true, index: true },
+    company_name: { type: String, default: 'NA' },
+    job_title: { type: String, required: true },
+    city: { type: String, default: 'NA' },
+    country: { type: String, default: 'NA' },
+    posted_date: { type: String, default: 'NA', index: true },
+    email: { type: String, default: 'NA' },
+    phone: { type: String, default: 'NA' },
+    website: { type: String, default: 'NA' },
+    linkedin: { type: String, default: 'NA' },
+    source_url: { type: String, required: true },
+    scraped_at_utc: { type: Date, default: Date.now },
+    tier: { type: Number, required: true, index: true }
+}, { timestamps: true });
+
+scrapedLeadSchema.index({ userId: 1, tier: 1, createdAt: -1 });
+
+module.exports = mongoose.model('ScrapedLead', scrapedLeadSchema);</code></pre>
+                </div>
+                <p><strong>Explanation:</strong> Contains the properties of each lead. A compound index on <code>userId, tier, createdAt</code> ensures the dashboard loads leads sorted by quality (tier 1: has email) instantly.</p>
+            </div>
+        </section>
+
+        <section id="middlewares">
+            <h2>Middlewares Folder</h2>
+            
+            <div class="tabs">
+                <button class="tab-btn active" onclick="openTab(event, 'mid-auth')">auth.js</button>
+            </div>
+
+            <div id="mid-auth" class="tab-content active">
+                <h3>auth.js</h3>
+                <p><strong>Purpose:</strong> Route guard that checks if a request contains a valid JWT.</p>
+                <div class="code-container">
+                    <div class="code-header"><span class="code-title">middlewares/auth.js</span></div>
+                    <pre><code>const jwt = require('jsonwebtoken');
+const User = require('../models/user');
+
+const protect = async (req, res, next) => {
+    let token;
+    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+        token = req.headers.authorization.split(' ')[1];
+    }
+    if (!token) {
+        return res.status(401).json({ message: "Not authorized" });
+    }
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        req.user = await User.findById(decoded.userId).select('-password');
+        next();
+    } catch (error) {
+        return res.status(401).json({ message: "Token failed" });
+    }
+};
+
+module.exports = protect;</code></pre>
+                </div>
+                <p><strong>Explanation:</strong> Extracts the bearer token, verifies it, and attaches the user document (minus password) to the request object before calling <code>next()</code>.</p>
+            </div>
+        </section>
+
+        <section id="utils">
+            <h2>Utilities Folder</h2>
+            
+            <div class="tabs">
+                <button class="tab-btn active" onclick="openTab(event, 'util-token')">generateToken.js</button>
+                <button class="tab-btn" onclick="openTab(event, 'util-scraper')">antiBotScraper.js</button>
+            </div>
+
+            <div id="util-token" class="tab-content active">
+                <h3>generateToken.js</h3>
+                <p><strong>Purpose:</strong> Helper for session tokens.</p>
+                <div class="code-container">
+                    <div class="code-header"><span class="code-title">utils/generateToken.js</span></div>
+                    <pre><code>const jwt = require('jsonwebtoken')
+
+const generateToken = (res, userId) => {
+    const accessToken = jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn: "15m" })
+    const refreshToken = jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn: "7d" })
+
+    res.cookie('refreshToken', refreshToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+    })
+
+    return accessToken
+}</code></pre>
+                </div>
+                <p><strong>Explanation:</strong> Returns a short-lived JSON access token and sets a secure long-lived cookie for seamless session refresh.</p>
+            </div>
+
+            <div id="util-scraper" class="tab-content">
+                <h3>antiBotScraper.js</h3>
+                <p><strong>Purpose:</strong> Network requests and browser automation.</p>
+                <p><strong>Explanation:</strong> Evaluates domain rate-limits (max 1 request/3s per domain) and chooses between three request flows:
+                <br>1. <code>fetchApiJson</code>: Fast 200-500ms delay API fetcher.
+                <br>2. <code>fetchStaticHtml</code>: Axios scraper with exponential backoff on 429 status codes.
+                <br>3. <code>fetchDynamicHtml</code>: Stealth Puppeteer scraper for sites requiring client-side rendering.</p>
+            </div>
+        </section>
+
+        <section id="routers">
+            <h2>Routers Folder</h2>
+            <p>Exposes and maps URL endpoints to controllers.</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Router</th>
+                        <th>Prefix</th>
+                        <th>Endpoints</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>authRoutes.js</code></td>
+                        <td>`/api/auth`</td>
+                        <td>`/signup`, `/login`, `/me`, `/upgrade`, `/refresh-token`, `/logout`</td>
+                    </tr>
+                    <tr>
+                        <td><code>clientRoutes.js</code></td>
+                        <td>`/api/ai`</td>
+                        <td>`POST /client` (SSE), `GET /status/:messageId`</td>
+                    </tr>
+                    <tr>
+                        <td><code>leadRoutes.js</code></td>
+                        <td>`/api/leads`</td>
+                        <td>`GET /` (paginated list), `GET /history`</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="controllers">
+            <h2>Controllers Folder</h2>
+            <p>Processes requests and sends back responses.</p>
+            
+            <div class="tabs">
+                <button class="tab-btn active" onclick="openTab(event, 'ctrl-sse')">aiClientAnalyzer.js</button>
+                <button class="tab-btn" onclick="openTab(event, 'ctrl-leads')">leadController.js</button>
+            </div>
+
+            <div id="ctrl-sse" class="tab-content active">
+                <h3>aiClientAnalyzer.js</h3>
+                <p><strong>Purpose:</strong> Starts the scraping pipeline and streams progress via Server-Sent Events.</p>
+                <p><strong>Code logic:</strong>
+                <br>- Creates a new <code>UsersMessage</code> document in <code>PROCESSING</code> status.
+                <br>- Configures the response headers to <code>text/event-stream</code>.
+                <br>- Triggers the parallel orchestrator. When a site completes, the callback filters results (e.g. enforcing the 5-lead limit for free accounts) and calls <code>res.write()</code> to push data instantly.</p>
+            </div>
+
+            <div id="ctrl-leads" class="tab-content">
+                <h3>leadController.js</h3>
+                <p><strong>Purpose:</strong> Querying leads database.</p>
+                <p><strong>Code logic:</strong>
+                <br>- <code>getLeads</code>: Implements paginated retrieval using Mongoose <code>.skip()</code> and <code>.limit()</code>.
+                <br>- <code>getHistory</code>: Groups user queries with their associated results by performing a lookup on <code>UsersMessage</code>, then retrieving related <code>ScrapedLead</code> documents.</p>
+            </div>
+        </section>
+
+        <section id="pipeline">
+            <h2>Scraping Pipeline (Implementations/)</h2>
+            <p>The backend scraping engine is divided into independent processing nodes.</p>
+
+            <div class="tabs">
+                <button class="tab-btn active" onclick="openTab(event, 'node-orch')">streamingOrchestrator.js</button>
+                <button class="tab-btn" onclick="openTab(event, 'node-sel')">siteSelector.js</button>
+                <button class="tab-btn" onclick="openTab(event, 'node-agent')">scraperAgent.js</button>
+                <button class="tab-btn" onclick="openTab(event, 'node-coll')">dataCollector.js</button>
+            </div>
+
+            <div id="node-orch" class="tab-content active">
+                <h3>streamingOrchestrator.js</h3>
+                <p><strong>Purpose:</strong> Drives the parallel scraping workflow.</p>
+                <p><strong>Explanation:</strong> Maps each selected site to an asynchronous promise chain: <code>scraperAgentNode -> dataCollectorNode -> optimizeAndSaveLeads -> onLeads()</code>. All promises are executed concurrently using <code>Promise.allSettled()</code>, ensuring that slow or blocked sites do not delay the streaming of faster sites.</p>
+            </div>
+
+            <div id="node-sel" class="tab-content">
+                <h3>siteSelector.js</h3>
+                <p><strong>Purpose:</strong> Selects target job boards and formats search URLs.</p>
+                <p><strong>Explanation:</strong> Evaluates the query's category and maps it to target sites (LinkedIn, RemoteOK, WeWorkRemotely, HackerNews). Builds search URLs by constructing slugs or query parameters.</p>
+            </div>
+
+            <div id="node-agent" class="tab-content">
+                <h3>scraperAgent.js</h3>
+                <p><strong>Purpose:</strong> Handles the raw extraction of page content.</p>
+                <p><strong>Explanation:</strong> Routing logic:
+                <br>- HackerNews API: Uses the fast JSON path.
+                <br>- Other sites: Scrapes page source, loads the content into Cheerio, strips non-text tags (like styles, scripts, navigation, footers), and returns clean, condensed HTML.</p>
+            </div>
+
+            <div id="node-coll" class="tab-content">
+                <h3>dataCollector.js</h3>
+                <p><strong>Purpose:</strong> Extracts structured lead objects from raw page content.</p>
+                <p><strong>Explanation:</strong> Utilizes hybrid extraction:
+                <br>- Direct JS/Cheerio parsers: Parses structured sources (LinkedIn, HackerNews, RemoteOK) instantly in JS, bypassing the LLM.
+                <br>- Cheerio pre-extraction: For unstructured sites like WeWorkRemotely, extracts job card text into a compact block, reducing the text size sent to Gemini by 99%.</p>
+            </div>
+        </section>
+
+        <section id="optimization">
+            <h2>Optimization Folder</h2>
+            
+            <div class="tabs">
+                <button class="tab-btn active" onclick="openTab(event, 'opt-opt')">dataOptimizer.js</button>
+            </div>
+
+            <div id="opt-opt" class="tab-content active">
+                <h3>dataOptimizer.js</h3>
+                <p><strong>Purpose:</strong> Cleans, filters, and saves leads.</p>
+                <p><strong>Core logic:</strong>
+                <br>1. **Timeframe Filter**: Parses relative/absolute dates. Stale leads (older than 2 months) are discarded.
+                <br>2. **Deduplication**: Queries the database to prevent duplicate entries for the same company and job title.
+                <br>3. **Quality Tiering**: Categorizes leads by contact availability. Leads with email addresses are assigned to Tier 1.
+                <br>4. **Sort**: Sorts leads to place Tier 1 entries at the beginning of the array before saving them to the database and streaming them to the client.</p>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        function openTab(evt, tabName) {
+            const container = evt.currentTarget.parentElement.parentElement;
+            
+            // Hide all tab content within this container
+            const tabContents = container.getElementsByClassName("tab-content");
+            for (let i = 0; i < tabContents.length; i++) {
+                tabContents[i].classList.remove("active");
+            }
+
+            // Remove active class from all tab buttons within this container
+            const tabBtns = container.getElementsByClassName("tab-btn");
+            for (let i = 0; i < tabBtns.length; i++) {
+                tabBtns[i].classList.remove("active");
+            }
+
+            // Show current tab and set button to active
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+
+        // Highlight active sidebar link on scroll
+        window.addEventListener('scroll', () => {
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.nav-link');
+            let current = '';
+
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= sectionTop - 60) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').slice(1) === current) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
